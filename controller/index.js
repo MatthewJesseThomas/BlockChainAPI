@@ -34,7 +34,7 @@ route.post('/jtcrypto', bodyParser.json(), (req, res) => {
     crypto.addCrypto(req, res);
 });
 route.get('/jtcrypto', (req, res) => {
-    crypto.fetchCrypto(req, res);
+    crypto.fetchCryptos(req, res);
 });
 route.get('/jtcrypto/:id', (req, res) => {
     crypto.fetchCrypto(req, res);
