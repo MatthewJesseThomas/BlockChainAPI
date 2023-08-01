@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devStart": "nodemon index.js"
+    "devStart": "nodemon server.js",
+    "start": "tsc && node ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.4",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
     "-": "^0.0.1",
