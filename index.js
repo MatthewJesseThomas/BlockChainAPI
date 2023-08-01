@@ -140,12 +140,6 @@ class Wallet {
 // Example Usage
 const matthew = new Wallet();
 const jake = new Wallet();
-const nikita = new Wallet();
-const savs = new Wallet();
-const john = new Wallet();
-const beyonce = new Wallet();
-const wiseman = new Wallet();
-const seth = new Wallet();
 matthew.sendMoney(350, matthew.publicKey);
 jake.sendMoney(200, jake.publicKey);
 console.log(Chain.instance);

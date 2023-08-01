@@ -4,12 +4,14 @@ const { createToken } = require('../middleware/AuthenticatedUser.js');
 
 class User {
     login(req, res) {
-        const { emailAdd, user_password } = req.body;
-        const Qry = `SELECT user_id, firstName, lastName, gender, cellphoneNumber, emailAdd, user_password, userRole, userProfile, joinDate 
+        const { emailAddress, user_password } = req.body;
+        const Qry = `SELECT user_id, firstName, lastName, gender, cellphoneNumber, emailAddress, user_password 
         FROM Users
-        WHERE emailAdd = '${emailAdd}';`;
+        WHERE emailAddress = '${emailAddress}';`;
         conDB.query(Qry, async (err, data) => {
-            if (err) throw err;
+            if (err) {
+              throw err;
+            }
             console.log(err);
             if ((!data.length) || (data == null)) {
                 res.status(401).json({
@@ -18,7 +20,9 @@ class User {
                 });
             } else {
                 await compare(user_password, data[0].user_password, (cErr, cResult) => {
-                    if (cErr) throw cErr;
+                    if (cErr) {
+                      throw cErr;
+                    }
                     console.log(cErr);
                     const jwToken =
                         createToken(
@@ -47,7 +51,7 @@ class User {
     }
     fetchUsers(req, res) {
         const Qry =
-            `SELECT user_id, firstName, lastName, gender, cellphoneNumber, emailAddress, password
+            `SELECT user_id, firstName, lastName, gender, cellphoneNumber, emailAddress, user_password
         FROM Users;`;
         conDB.query(Qry, (err, data) => {
             console.log(err);
@@ -62,7 +66,7 @@ class User {
     }
     fetchUser(req, res) {
         const Qry =
-            `SELECT user_id, firstName, lastName, gender, cellphoneNumber, emailAddress, password
+            `SELECT user_id, firstName, lastName, gender, cellphoneNumber, emailAddress, user_password
         FROM Users
         WHERE user_id = ?;
         `;
@@ -79,11 +83,11 @@ class User {
     }
     async createUser(req, res) {
         let userDetails = req.body;
-        userDetails.password = await
-            hash(userDetails.password, 15);
+        userDetails.user_password = await
+            hash(userDetails.user_password, 15);
         let user = {
             emailAddress: userDetails.emailAddress,
-            password: userDetails.password
+            user_password: userDetails.user_password
         }
         const Qry =
             `INSERT INTO Users
@@ -126,7 +130,7 @@ class User {
                 }
                 console.log(err);
                 res.status(200).json({
-                    msg: "A User Record Was Removed From Stygian-Umbra-GamingDB..."
+                    msg: "A User Record Was Removed From Crypto..."
                 });
             });
     }
