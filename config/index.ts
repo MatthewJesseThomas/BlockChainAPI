@@ -1,8 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 const mysql = require('mysql');
-const dotenv = require('dotenv');
+const dotenv = require('dotenv')
 dotenv.config();
+
 let conDB = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -10,4 +9,4 @@ let conDB = mysql.createConnection({
     database: process.env.DB_DATABASENAME,
     multipleStatements: true,
 });
-exports.default = conDB;
+export default conDB

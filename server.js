@@ -17,6 +17,13 @@ app.use((req, res, next) => {
 
 app.use(route);
 app.use(cors(), cookieParser(), express.json(), express.urlencoded({ extended: false }));
+app.post('/api/endpoint', (req, res) => {
+    const formData = req.body; // Access the incoming form data here
+    // Process the formData as needed (e.g., store in the database, send email, etc.)
+    console.log('Received form data:', formData);
+    res.json({ message: 'Form data received successfully' });
+});
+
 
 app.listen(Port, () => {
     console.log(`Server SStreaming on Port: ${Port}`);

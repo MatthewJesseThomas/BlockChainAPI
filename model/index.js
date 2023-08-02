@@ -2,7 +2,8 @@ const conDB = require('../config/index.js');
 const { hash, compare, hashSync } = require('bcrypt');
 const { createToken } = require('../middleware/AuthenticatedUser.js');
 
-class User {
+class User {cls
+  
     login(req, res) {
         const { emailAddress, user_password } = req.body;
         const Qry = `SELECT user_id, firstName, lastName, gender, cellphoneNumber, emailAddress, user_password 
