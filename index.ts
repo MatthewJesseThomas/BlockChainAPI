@@ -1,4 +1,5 @@
 import * as crypto from "crypto";
+const conn = require('config/index.js');
 
 class Transaction {
   constructor(
@@ -125,7 +126,19 @@ class Wallet {
     this.publicKey = key_pair.publicKey;
   }
 
-  sendMoney(amount: number, payeePublicKey: string) {
+  async logCurrentAmount() {
+    try {
+      const [rows] = await conn.execute(
+        "INSERT INTO Crypto (public_key, amount) VALUES (?, ?) ON DUPLICATE KEY UPDATE amount = amount",
+        [this.publicKey, 0] // Set the initial amount to 0, this will be updated later
+      );
+      console.log("Current amount logged in the database.");
+    } catch (error) {
+      console.error("Error logging the current amount:", error);
+    }
+  }
+
+  async sendMoney(amount: number, payeePublicKey: string) {
     const transaction = new Transaction(amount, this.publicKey, payeePublicKey);
 
     const sign = crypto.createSign("SHA256");
@@ -136,6 +149,16 @@ class Wallet {
     const signature = sign.sign(privateKeyBuffer);
     console.log(signature.toString("base64"));
     Chain.instance.addBlock(transaction, this.publicKey, signature);
+
+    try {
+      await conn.execute(
+        "INSERT INTO transactions (sender, receiver, amount, timestamped) VALUES (?, ?, ?, ?)",
+        [this.publicKey, payeePublicKey, amount, new Date()]
+      );
+      console.log("Transaction logged in the database.");
+    } catch (error) {
+      console.error("Error logging the transaction:", error);
+    }
   }
 }
 
@@ -143,9 +166,11 @@ class Wallet {
 const matthew = new Wallet();
 const jake = new Wallet();
 
+// Log the current amount for both wallets
+matthew.logCurrentAmount();
+jake.logCurrentAmount();
 
-matthew.sendMoney(350, matthew.publicKey);
-jake.sendMoney(200, jake.publicKey);
-
+matthew.sendMoney(350, jake.publicKey);
+jake.sendMoney(200, matthew.publicKey);
 
 console.log(Chain.instance);
