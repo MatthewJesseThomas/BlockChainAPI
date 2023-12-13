@@ -5,6 +5,7 @@
         "Cypto",
         "DATABASENAME",
         "jtcrypto",
+        "knexfile",
         "sourcery"
     ]
 }
